@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   get_next_line_utils.c                              :+:    :+:            */
+/*   get_next_line_utils_bonus.c                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: rasc035 <rasc035@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/14 22:16:29 by rasc035       #+#    #+#                 */
-/*   Updated: 2023/10/26 16:57:53 by crasche       ########   odam.nl         */
+/*   Updated: 2023/10/26 17:52:38 by crasche       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 //	free_master - combined free function, used for most cases when
 //	my malloc mem has to be free'd

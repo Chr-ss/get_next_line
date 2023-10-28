@@ -1,17 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   get_next_line.c                                    :+:    :+:            */
+/*   get_next_line_bonus.c                              :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: rasc035 <rasc035@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/14 22:16:05 by rasc035       #+#    #+#                 */
-/*   Updated: 2023/10/28 20:10:27 by crasche       ########   odam.nl         */
+/*   Updated: 2023/10/26 17:56:24 by crasche       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
-
+#include "get_next_line_bonus.h"
 //	clean_for_next_call - cleaning lst for the next call and freeing
 //	all characters we already used in the current string
 
@@ -114,24 +113,17 @@ static int	read_to_list(t_list **lst, int fd)
 	return (1);
 }
 
-//	get_next_line - getting a fd and returning line by line
-//	remembering the characters read and position in file
-
 char	*get_next_line(int fd)
 {
-	static t_list	*lst = NULL;
+	static t_list	*lst[4096];
 	char			*next_line;
 
-	if (fd < 0 || read(fd, &next_line, 0) < 0 || BUFFER_SIZE <= 0)
-	// {
-	// 	free_master(lst, 0, 0);
-	// 	lst = NULL;
+	if (fd < 0 || fd > 4095 || read(fd, &next_line, 0) < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	// }
-	if (read_to_list(&lst, fd) == 0 || !lst)
+	if (read_to_list(&lst[fd], fd) == 0 || !lst[fd])
 		return (NULL);
-	next_line = lst_to_line(lst);
-	clean_for_next_call(&lst);
+	next_line = lst_to_line(lst[fd]);
+	clean_for_next_call(&lst[fd]);
 	return (next_line);
 }
 
@@ -140,27 +132,22 @@ char	*get_next_line(int fd)
 
 // int	main(void)
 // {
-// 	// int	fd;
+// 	int	fd;
 // 	char	*curr_line;
+// 	int	i;
 
-// 	// fd = open("test.txt", O_RDWR);
-// 	curr_line = get_next_line(0);
-// 	while (curr_line)
+// 	i = 0;
+
+// 	fd = open("test.txt", O_RDWR);
+// 	while (i++ < 25)
 // 	{
+// 		curr_line = get_next_line(fd);
+// 		if (!curr_line)
+// 			return (0);
 // 		printf(">%s", curr_line);
 // 		free(curr_line);
-// 		curr_line = get_next_line(0);
 // 	}
-// 	free(curr_line);
-// 	// curr_line = get_next_line(fd);
-// 	// // while (curr_line)
-// 	// // {
-// 	// 	printf(">%s", curr_line);
-// 	// // 	free(curr_line);
-// 	// // 	curr_line = get_next_line(fd);
-// 	// // }
-// 	// free(curr_line);
-// 	// close(fd);
+// 	close(fd);
 
 // 	return (0);
 // }
