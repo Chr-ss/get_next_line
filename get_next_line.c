@@ -6,7 +6,7 @@
 /*   By: rasc035 <rasc035@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/14 22:16:05 by rasc035       #+#    #+#                 */
-/*   Updated: 2023/10/28 20:10:27 by crasche       ########   odam.nl         */
+/*   Updated: 2023/10/26 18:10:32 by crasche       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 //	clean_for_next_call - cleaning lst for the next call and freeing
 //	all characters we already used in the current string
 
-static void	clean_for_next_call(t_list **lst)
+static void	clean_for_next_call(t_list **lst, char *next_line)
 {
 	t_list	*last_node;
 	t_list	*clean_node;
@@ -25,10 +25,10 @@ static void	clean_for_next_call(t_list **lst)
 
 	clean_buffer = ft_calloc(BUFFER_SIZE + 1, 1);
 	if (!clean_buffer)
-		return (free_master(lst, 0, 0));
+		return (free_master(lst, 0, 0, next_line));
 	clean_node = ft_calloc(sizeof(t_list), 1);
 	if (!clean_node)
-		return (free_master(lst, 0, clean_buffer));
+		return (free_master(lst, 0, clean_buffer, next_line));
 	last_node = *lst;
 	while (last_node->next)
 		last_node = last_node->next;
@@ -39,7 +39,7 @@ static void	clean_for_next_call(t_list **lst)
 	while (last_node->buffer[i] && last_node->buffer[++i])
 		clean_buffer[k++] = last_node->buffer[i];
 	clean_node->buffer = clean_buffer;
-	free_master(lst, clean_node, clean_buffer);
+	free_master(lst, clean_node, clean_buffer, 0);
 }
 
 //	lst_to_line - reading lst and creating "next_line" string
@@ -107,7 +107,7 @@ static int	read_to_list(t_list **lst, int fd)
 		}
 		if (add_lst_node(lst, buffer) == -1)
 		{
-			free_master(lst, 0, buffer);
+			free_master(lst, 0, buffer, 0);
 			return (0);
 		}
 	}
@@ -123,15 +123,14 @@ char	*get_next_line(int fd)
 	char			*next_line;
 
 	if (fd < 0 || read(fd, &next_line, 0) < 0 || BUFFER_SIZE <= 0)
-	// {
-	// 	free_master(lst, 0, 0);
-	// 	lst = NULL;
+	{
+		free_master(&lst, 0, 0, 0);
 		return (NULL);
-	// }
+	}
 	if (read_to_list(&lst, fd) == 0 || !lst)
 		return (NULL);
 	next_line = lst_to_line(lst);
-	clean_for_next_call(&lst);
+	clean_for_next_call(&lst, next_line);
 	return (next_line);
 }
 
@@ -140,27 +139,27 @@ char	*get_next_line(int fd)
 
 // int	main(void)
 // {
-// 	// int	fd;
+// 	int	fd;
 // 	char	*curr_line;
 
-// 	// fd = open("test.txt", O_RDWR);
-// 	curr_line = get_next_line(0);
+// 	fd = open("test.txt", O_RDWR);
+// 	curr_line = get_next_line(fd);
 // 	while (curr_line)
 // 	{
 // 		printf(">%s", curr_line);
 // 		free(curr_line);
-// 		curr_line = get_next_line(0);
+// 		curr_line = get_next_line(fd);
 // 	}
 // 	free(curr_line);
-// 	// curr_line = get_next_line(fd);
-// 	// // while (curr_line)
-// 	// // {
-// 	// 	printf(">%s", curr_line);
-// 	// // 	free(curr_line);
-// 	// // 	curr_line = get_next_line(fd);
-// 	// // }
-// 	// free(curr_line);
-// 	// close(fd);
+// 	curr_line = get_next_line(fd);
+// 	// while (curr_line)
+// 	// {
+// 		printf(">%s", curr_line);
+// 	// 	free(curr_line);
+// 	// 	curr_line = get_next_line(fd);
+// 	// }
+// 	free(curr_line);
+// 	close(fd);
 
 // 	return (0);
 // }

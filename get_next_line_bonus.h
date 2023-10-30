@@ -6,7 +6,7 @@
 /*   By: rasc035 <rasc035@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/14 22:16:57 by rasc035       #+#    #+#                 */
-/*   Updated: 2023/10/24 14:10:09 by crasche       ########   odam.nl         */
+/*   Updated: 2023/10/30 20:19:20 by veno          ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ typedef struct s_list
 
 char	*get_next_line(int fd);
 
-void	free_master(t_list **list, t_list *clean_node, char *buf);
+void	free_master(t_list **list, t_list *clean_node, char *buf, char *nl);
 int		lst_until_nl(t_list *lst);
 int		lst_until_nl1(t_list *lst);
 void	*ft_calloc(size_t nmemb, size_t size);
