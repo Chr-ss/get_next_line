@@ -6,7 +6,7 @@
 /*   By: rasc035 <rasc035@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/14 22:16:29 by rasc035       #+#    #+#                 */
-/*   Updated: 2023/10/30 20:19:22 by veno          ########   odam.nl         */
+/*   Updated: 2023/11/02 13:32:51 by crasche       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,10 @@
 //	free_master - combined free function, used for most cases when
 //	my malloc mem has to be free'd
 
-void	free_master(t_list **list, t_list *clean_node, char *buf, char *nl)
+void	free_master(t_list **list, t_list **clean_node, char **buf, char **nl)
 {
 	t_list	*tmp;
 
-	if (!*list)
-		return ;
 	while (*list)
 	{
 		tmp = (*list)->next;
@@ -29,16 +27,19 @@ void	free_master(t_list **list, t_list *clean_node, char *buf, char *nl)
 		*list = tmp;
 	}
 	*list = NULL;
-	if (clean_node && clean_node->buffer[0] != '\0')
-		*list = clean_node;
-	else
+	if (clean_node && (*clean_node)->buffer[0] != '\0')
+		*list = *clean_node;
+	else if (buf || clean_node || nl)
 	{
 		if (buf)
-			free(buf);
+			free(*buf);
 		if (clean_node)
-			free(clean_node);
+			free(*clean_node);
 		if (nl)
-			free(nl);
+		{
+			free(*nl);
+			*nl = NULL;
+		}
 	}
 }
 

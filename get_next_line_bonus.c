@@ -6,15 +6,16 @@
 /*   By: rasc035 <rasc035@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/14 22:16:05 by rasc035       #+#    #+#                 */
-/*   Updated: 2023/10/30 20:17:10 by veno          ########   odam.nl         */
+/*   Updated: 2023/11/02 13:45:00 by crasche       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line_bonus.h"
+#include "get_next_line.h"
+
 //	clean_for_next_call - cleaning lst for the next call and freeing
 //	all characters we already used in the current string
 
-static void	clean_for_next_call(t_list **lst, char *next_line)
+static void	clean_for_next_call(t_list **lst, char **next_line)
 {
 	t_list	*last_node;
 	t_list	*clean_node;
@@ -27,7 +28,7 @@ static void	clean_for_next_call(t_list **lst, char *next_line)
 		return (free_master(lst, 0, 0, next_line));
 	clean_node = ft_calloc(sizeof(t_list), 1);
 	if (!clean_node)
-		return (free_master(lst, 0, clean_buffer, next_line));
+		return (free_master(lst, 0, &clean_buffer, next_line));
 	last_node = *lst;
 	while (last_node->next)
 		last_node = last_node->next;
@@ -38,7 +39,7 @@ static void	clean_for_next_call(t_list **lst, char *next_line)
 	while (last_node->buffer[i] && last_node->buffer[++i])
 		clean_buffer[k++] = last_node->buffer[i];
 	clean_node->buffer = clean_buffer;
-	free_master(lst, clean_node, clean_buffer, 0);
+	free_master(lst, &clean_node, &clean_buffer, 0);
 }
 
 //	lst_to_line - reading lst and creating "next_line" string
@@ -68,10 +69,7 @@ static int	add_lst_node(t_list **lst, char *buffer)
 
 	new = ft_calloc(sizeof(t_list), 1);
 	if (!new)
-	{
-		free(buffer);
 		return (-1);
-	}
 	new->buffer = buffer;
 	new->next = NULL;
 	if (!(*lst))
@@ -97,20 +95,20 @@ static int	read_to_list(t_list **lst, int fd)
 	{
 		buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 		if (!buffer)
-			return (0);
+			return (-1);
 		read_ret = read(fd, buffer, BUFFER_SIZE);
-		if (read_ret <= 0)
+		if (read_ret == 0)
 		{
 			free(buffer);
-			return (1);
+			return (0);
 		}
 		if (add_lst_node(lst, buffer) == -1)
 		{
-			free_master(lst, 0, buffer, 0);
-			return (0);
+			free_master(lst, 0, &buffer, 0);
+			return (-1);
 		}
 	}
-	return (1);
+	return (0);
 }
 
 char	*get_next_line(int fd)
@@ -123,10 +121,13 @@ char	*get_next_line(int fd)
 		free_master(&lst[fd], 0, 0, 0);
 		return (NULL);
 	}
-	if (read_to_list(&lst[fd], fd) == 0 || !lst[fd])
+	if (read_to_list(&lst[fd], fd) == -1 || !lst[fd])
+	{
+		free_master(&lst[fd], 0, 0, 0);
 		return (NULL);
+	}
 	next_line = lst_to_line(lst[fd]);
-	clean_for_next_call(&lst[fd], next_line);
+	clean_for_next_call(&lst[fd], &next_line);
 	return (next_line);
 }
 

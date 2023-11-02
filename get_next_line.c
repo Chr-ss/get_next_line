@@ -6,7 +6,7 @@
 /*   By: rasc035 <rasc035@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/14 22:16:05 by rasc035       #+#    #+#                 */
-/*   Updated: 2023/10/26 18:10:32 by crasche       ########   odam.nl         */
+/*   Updated: 2023/11/02 13:47:32 by crasche       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 //	clean_for_next_call - cleaning lst for the next call and freeing
 //	all characters we already used in the current string
 
-static void	clean_for_next_call(t_list **lst, char *next_line)
+static void	clean_for_next_call(t_list **lst, char **next_line)
 {
 	t_list	*last_node;
 	t_list	*clean_node;
@@ -28,7 +28,7 @@ static void	clean_for_next_call(t_list **lst, char *next_line)
 		return (free_master(lst, 0, 0, next_line));
 	clean_node = ft_calloc(sizeof(t_list), 1);
 	if (!clean_node)
-		return (free_master(lst, 0, clean_buffer, next_line));
+		return (free_master(lst, 0, &clean_buffer, next_line));
 	last_node = *lst;
 	while (last_node->next)
 		last_node = last_node->next;
@@ -39,7 +39,7 @@ static void	clean_for_next_call(t_list **lst, char *next_line)
 	while (last_node->buffer[i] && last_node->buffer[++i])
 		clean_buffer[k++] = last_node->buffer[i];
 	clean_node->buffer = clean_buffer;
-	free_master(lst, clean_node, clean_buffer, 0);
+	free_master(lst, &clean_node, &clean_buffer, 0);
 }
 
 //	lst_to_line - reading lst and creating "next_line" string
@@ -69,10 +69,7 @@ static int	add_lst_node(t_list **lst, char *buffer)
 
 	new = ft_calloc(sizeof(t_list), 1);
 	if (!new)
-	{
-		free(buffer);
 		return (-1);
-	}
 	new->buffer = buffer;
 	new->next = NULL;
 	if (!(*lst))
@@ -98,20 +95,20 @@ static int	read_to_list(t_list **lst, int fd)
 	{
 		buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 		if (!buffer)
-			return (0);
+			return (-1);
 		read_ret = read(fd, buffer, BUFFER_SIZE);
-		if (read_ret <= 0)
+		if (read_ret == 0)
 		{
 			free(buffer);
-			return (1);
+			return (0);
 		}
 		if (add_lst_node(lst, buffer) == -1)
 		{
-			free_master(lst, 0, buffer, 0);
-			return (0);
+			free_master(lst, 0, &buffer, 0);
+			return (-1);
 		}
 	}
-	return (1);
+	return (0);
 }
 
 //	get_next_line - getting a fd and returning line by line
@@ -127,10 +124,13 @@ char	*get_next_line(int fd)
 		free_master(&lst, 0, 0, 0);
 		return (NULL);
 	}
-	if (read_to_list(&lst, fd) == 0 || !lst)
+	if (read_to_list(&lst, fd) == -1 || !lst)
+	{
+		free_master(&lst, 0, 0, 0);
 		return (NULL);
+	}
 	next_line = lst_to_line(lst);
-	clean_for_next_call(&lst, next_line);
+	clean_for_next_call(&lst, &next_line);
 	return (next_line);
 }
 
@@ -142,23 +142,29 @@ char	*get_next_line(int fd)
 // 	int	fd;
 // 	char	*curr_line;
 
-// 	fd = open("test.txt", O_RDWR);
-// 	curr_line = get_next_line(fd);
-// 	while (curr_line)
-// 	{
-// 		printf(">%s", curr_line);
-// 		free(curr_line);
-// 		curr_line = get_next_line(fd);
-// 	}
-// 	free(curr_line);
-// 	curr_line = get_next_line(fd);
+// 	fd = open("one_line_no_nl.txt", O_RDWR);
+// 	// curr_line = get_next_line(fd);
 // 	// while (curr_line)
 // 	// {
-// 		printf(">%s", curr_line);
+// 	// 	printf(">%s", curr_line);
 // 	// 	free(curr_line);
 // 	// 	curr_line = get_next_line(fd);
 // 	// }
+// 	// free(curr_line);
+// 	// curr_line = get_next_line(fd);
+// 	// // while (curr_line)
+// 	// // {
+// 	// 	printf(">%s", curr_line);
+// 	// // 	free(curr_line);
+// 	// // 	curr_line = get_next_line(fd);
+// 	// // }
+// 	// free(curr_line);
+
+// 	curr_line = get_next_line(fd);
+// 	printf(">%s", curr_line);
 // 	free(curr_line);
+
+
 // 	close(fd);
 
 // 	return (0);
