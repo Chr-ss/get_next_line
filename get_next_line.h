@@ -6,7 +6,7 @@
 /*   By: rasc035 <rasc035@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/14 22:16:57 by rasc035       #+#    #+#                 */
-/*   Updated: 2023/11/02 13:20:39 by crasche       ########   odam.nl         */
+/*   Updated: 2023/11/05 17:11:04 by crasche       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,6 @@ int		lst_until_nl(t_list *lst);
 int		lst_until_nl1(t_list *lst);
 void	*ft_calloc(size_t nmemb, size_t size);
 void	lst_to_next_line(t_list *lst, char *next_line);
-void	free_master(t_list **list, t_list **clean_node, char **buf, char **nl);
+int		free_master(t_list **list, t_list **clean_node, char **buf, char **nl);
 
 #endif /* GET_NEXT_LINE_H */

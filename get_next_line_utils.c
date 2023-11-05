@@ -6,7 +6,7 @@
 /*   By: rasc035 <rasc035@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/14 22:16:29 by rasc035       #+#    #+#                 */
-/*   Updated: 2023/11/02 13:32:51 by crasche       ########   odam.nl         */
+/*   Updated: 2023/11/05 17:10:53 by crasche       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 //	free_master - combined free function, used for most cases when
 //	my malloc mem has to be free'd
 
-void	free_master(t_list **list, t_list **clean_node, char **buf, char **nl)
+int	free_master(t_list **list, t_list **clean_node, char **buf, char **nl)
 {
 	t_list	*tmp;
 
@@ -41,6 +41,7 @@ void	free_master(t_list **list, t_list **clean_node, char **buf, char **nl)
 			*nl = NULL;
 		}
 	}
+	return (-1);
 }
 
 //	lst_to_next_line - reading and copying lst until new line char
@@ -111,17 +112,14 @@ int	lst_until_nl1(t_list *lst)
 		while (lst->buffer[i])
 		{
 			if (lst->buffer[i] == '\n')
-			{
-				ret += i;
-				return (++ret);
-			}
+				return (1);
 			i++;
 		}
 		ret += i;
 		i = 0;
 		lst = lst->next;
 	}
-	return (i);
+	return (0);
 }
 
 //	lst_until_nl - pretty much copy of lst_until_nl1 - counting characters until

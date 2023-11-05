@@ -6,16 +6,16 @@
 /*   By: rasc035 <rasc035@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2023/10/14 22:16:05 by rasc035       #+#    #+#                 */
-/*   Updated: 2023/11/02 13:45:00 by crasche       ########   odam.nl         */
+/*   Updated: 2023/11/05 17:29:28 by crasche       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 //	clean_for_next_call - cleaning lst for the next call and freeing
 //	all characters we already used in the current string
 
-static void	clean_for_next_call(t_list **lst, char **next_line)
+static int	clean_for_next_call(t_list **lst, char **next_line)
 {
 	t_list	*last_node;
 	t_list	*clean_node;
@@ -39,7 +39,9 @@ static void	clean_for_next_call(t_list **lst, char **next_line)
 	while (last_node->buffer[i] && last_node->buffer[++i])
 		clean_buffer[k++] = last_node->buffer[i];
 	clean_node->buffer = clean_buffer;
+	clean_node->next = NULL;
 	free_master(lst, &clean_node, &clean_buffer, 0);
+	return (0);
 }
 
 //	lst_to_line - reading lst and creating "next_line" string
@@ -100,13 +102,11 @@ static int	read_to_list(t_list **lst, int fd)
 		if (read_ret == 0)
 		{
 			free(buffer);
+			buffer = NULL;
 			return (0);
 		}
 		if (add_lst_node(lst, buffer) == -1)
-		{
-			free_master(lst, 0, &buffer, 0);
-			return (-1);
-		}
+			return (free_master(lst, 0, &buffer, 0));
 	}
 	return (0);
 }
