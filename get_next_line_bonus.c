@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   get_next_line_bonus.c                              :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: rasc035 <rasc035@student.codam.nl>           +#+                     */
+/*   By: crasche <crasche@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/10/14 22:16:05 by rasc035       #+#    #+#                 */
-/*   Updated: 2023/11/05 17:29:28 by crasche       ########   odam.nl         */
+/*   Created: 2023/10/14 22:16:05 by crasche       #+#    #+#                 */
+/*   Updated: 2023/11/07 14:51:15 by crasche       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,11 @@ static int	add_lst_node(t_list **lst, char *buffer)
 
 	new = ft_calloc(sizeof(t_list), 1);
 	if (!new)
+	{
+		free(buffer);
+		buffer = NULL;
 		return (-1);
+	}
 	new->buffer = buffer;
 	new->next = NULL;
 	if (!(*lst))
@@ -106,7 +110,7 @@ static int	read_to_list(t_list **lst, int fd)
 			return (0);
 		}
 		if (add_lst_node(lst, buffer) == -1)
-			return (free_master(lst, 0, &buffer, 0));
+			return (free_master(lst, 0, 0, 0));
 	}
 	return (0);
 }
@@ -127,7 +131,10 @@ char	*get_next_line(int fd)
 		return (NULL);
 	}
 	next_line = lst_to_line(lst[fd]);
-	clean_for_next_call(&lst[fd], &next_line);
+	if (next_line == NULL)
+		free_master(&lst[fd], 0, 0, 0);
+	else
+		clean_for_next_call(&lst[fd], &next_line);
 	return (next_line);
 }
 
@@ -138,20 +145,104 @@ char	*get_next_line(int fd)
 // {
 // 	int	fd;
 // 	char	*curr_line;
-// 	int	i;
 
-// 	i = 0;
+// 	fd = open("get_next_line_utils.c", O_RDWR);
+// 	// curr_line = get_next_line(fd);
+// 	// while (curr_line)
+// 	// {
+// 	// 	printf(">%s", curr_line);
+// 	// 	free(curr_line);
+// 	// 	curr_line = get_next_line(fd);
+// 	// }
+// 	// free(curr_line);
+// 	// curr_line = get_next_line(fd);
+// 	// // while (curr_line)
+// 	// // {
+// 	// 	printf(">%s", curr_line);
+// 	// // 	free(curr_line);
+// 	// // 	curr_line = get_next_line(fd);
+// 	// // }
+// 	// free(curr_line);
 
-// 	fd = open("test.txt", O_RDWR);
-// 	while (i++ < 25)
-// 	{
-// 		curr_line = get_next_line(fd);
-// 		if (!curr_line)
-// 			return (0);
-// 		printf(">%s", curr_line);
-// 		free(curr_line);
-// 	}
+// 	curr_line = get_next_line(fd);
+// 	printf(">$%s$\n----------\n", curr_line);
+// 	free(curr_line);
 // 	close(fd);
-
+// 	curr_line = get_next_line(fd);
+// 	printf(">$%s$\n----------\n", curr_line);
+// 	free(curr_line);
+// 	close(fd);
+// 	curr_line = get_next_line(fd);
+// 	printf(">$%s$\n----------\n", curr_line);
+// 	free(curr_line);
+// 	close(fd);
+// 	curr_line = get_next_line(fd);
+// 	printf(">$%s$\n----------\n", curr_line);
+// 	free(curr_line);
+// 	close(fd);
+// 	curr_line = get_next_line(fd);
+// 	printf(">$%s$\n----------\n", curr_line);
+// 	free(curr_line);
+// 	close(fd);
+// 	curr_line = get_next_line(fd);
+// 	printf(">$%s$\n----------\n", curr_line);
+// 	free(curr_line);
+// 	close(fd);
+// 	curr_line = get_next_line(fd);
+// 	printf(">$%s$\n----------\n", curr_line);
+// 	free(curr_line);
+// 	close(fd);
+// 	curr_line = get_next_line(fd);
+// 	printf(">$%s$\n----------\n", curr_line);
+// 	free(curr_line);
+// 	close(fd);
+// 	curr_line = get_next_line(fd);
+// 	printf(">$%s$\n----------\n", curr_line);
+// 	free(curr_line);
+// 	close(fd);
+// 	curr_line = get_next_line(fd);
+// 	printf(">$%s$\n----------\n", curr_line);
+// 	free(curr_line);
+// 	close(fd);
+// 	curr_line = get_next_line(fd);
+// 	printf(">$%s$\n----------\n", curr_line);
+// 	free(curr_line);
+// 	close(fd);
+// 	curr_line = get_next_line(fd);
+// 	printf(">$%s$\n----------\n", curr_line);
+// 	free(curr_line);
+// 	close(fd);
+// 	curr_line = get_next_line(fd);
+// 	printf(">$%s$\n----------\n", curr_line);
+// 	free(curr_line);
+// 	close(fd);
+// 	curr_line = get_next_line(fd);
+// 	printf(">$%s$\n----------\n", curr_line);
+// 	free(curr_line);
+// 	close(fd);
+// 	curr_line = get_next_line(fd);
+// 	printf(">$%s$\n----------\n", curr_line);
+// 	free(curr_line);
+// 	close(fd);
+// 	curr_line = get_next_line(fd);
+// 	printf(">$%s$\n----------\n", curr_line);
+// 	free(curr_line);
+// 	close(fd);
+// 	curr_line = get_next_line(fd);
+// 	printf(">$%s$\n----------\n", curr_line);
+// 	free(curr_line);
+// 	close(fd);
+// 	curr_line = get_next_line(fd);
+// 	printf(">$%s$\n----------\n", curr_line);
+// 	free(curr_line);
+// 	close(fd);
+// 	curr_line = get_next_line(fd);
+// 	printf(">$%s$\n----------\n", curr_line);
+// 	free(curr_line);
+// 	close(fd);
+// 	curr_line = get_next_line(fd);
+// 	printf(">$%s$\n----------\n", curr_line);
+// 	free(curr_line);
+// 	close(fd);
 // 	return (0);
 // }

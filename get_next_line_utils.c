@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   get_next_line_utils.c                              :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: rasc035 <rasc035@student.codam.nl>           +#+                     */
+/*   By: crasche <crasche@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/10/14 22:16:29 by rasc035       #+#    #+#                 */
-/*   Updated: 2023/11/05 17:10:53 by crasche       ########   odam.nl         */
+/*   Created: 2023/10/14 22:16:29 by crasche       #+#    #+#                 */
+/*   Updated: 2023/11/07 14:48:35 by crasche       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,23 +101,26 @@ void	*ft_calloc(size_t nmemb, size_t size)
 int	lst_until_nl1(t_list *lst)
 {
 	int	i;
-	int	ret;
 
-	ret = 0;
 	i = 0;
 	if (!lst)
 		return (0);
-	while (lst)
+	while (lst->buffer[i])
 	{
-		while (lst->buffer[i])
-		{
-			if (lst->buffer[i] == '\n')
-				return (1);
-			i++;
-		}
-		ret += i;
-		i = 0;
+		if (lst->buffer[i] == '\n')
+			return (1);
+		i++;
+	}
+	while (lst->next)
+	{
 		lst = lst->next;
+	}
+	i = 0;
+	while (lst->buffer[i])
+	{
+		if (lst->buffer[i] == '\n')
+			return (1);
+		i++;
 	}
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   get_next_line_bonus.h                              :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: rasc035 <rasc035@student.codam.nl>           +#+                     */
+/*   By: crasche <crasche@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/10/14 22:16:57 by rasc035       #+#    #+#                 */
-/*   Updated: 2023/11/05 17:28:05 by crasche       ########   odam.nl         */
+/*   Created: 2023/10/14 22:16:57 by crasche       #+#    #+#                 */
+/*   Updated: 2023/11/07 14:49:34 by crasche       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,10 @@ typedef struct s_list
 
 char	*get_next_line(int fd);
 
-int		free_master(t_list **list, t_list **clean_node, char **buf, char **nl);
 int		lst_until_nl(t_list *lst);
 int		lst_until_nl1(t_list *lst);
 void	*ft_calloc(size_t nmemb, size_t size);
 void	lst_to_next_line(t_list *lst, char *next_line);
+int		free_master(t_list **list, t_list **clean_node, char **buf, char **nl);
 
 #endif /* GET_NEXT_LINE_BONUS_H */

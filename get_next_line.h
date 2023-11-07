@@ -3,10 +3,10 @@
 /*                                                        ::::::::            */
 /*   get_next_line.h                                    :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: rasc035 <rasc035@student.codam.nl>           +#+                     */
+/*   By: crasche <crasche@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2023/10/14 22:16:57 by rasc035       #+#    #+#                 */
-/*   Updated: 2023/11/05 17:11:04 by crasche       ########   odam.nl         */
+/*   Created: 2023/10/14 22:16:57 by crasche       #+#    #+#                 */
+/*   Updated: 2023/11/07 14:48:43 by crasche       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
