@@ -43,9 +43,7 @@ Run with:
   - `get_next_line.h`
   - (Bonus) `get_next_line_bonus.c`, `get_next_line_utils_bonus.c`, `get_next_line_bonus.h`.
 - Make sure all required rules are in `Makefile`.
-- Submit only via the assigned Git repository.
 
 ## Notes
 - Ensure the function works with different buffer sizes (1, 9999, etc.).
 - `lseek()` and `libft` usage is forbidden.
-- Prepare various test cases, as peer evaluation will be conducted.
